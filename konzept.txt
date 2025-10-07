@@ -1,0 +1,15 @@
+sehr asm nah aber mit structs
+
+Bsp:
+float(nummer, komma)
+
+ax = 5;
+
+float ananas = 0.5;
+//
+ananas:
+    db 5, 1  <- 5 und 1 kommastelle = 0.5 ~ 50 und 1 kommastelle = 5.0
+
+bx = [ananas]
+
+ax *= bx
