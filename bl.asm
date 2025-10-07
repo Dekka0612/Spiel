@@ -33,7 +33,7 @@ init_load:
 load:
     int 0x13
     cmp bx, 0x7e00 + 512
-    jmp init_test
+    jmp init_draw
     add bx, 1
     jmp load
 
@@ -49,18 +49,27 @@ diskNum:
 times 510 - ($ - $$) db 0
 db 0x55, 0xaa
 
-init_test:
-    mov ah, 0x0e
-    mov bx, text
-    jmp test
-
-test:
-    mov al, [bx]
-    cmp al, 0
-    je exit
-    add bx, 1
+init_draw:
+    mov ah, 0x00
+    mov al, 0x12 ;Bildschirmmodus: 640 x 480 ~ 4 Farben
     int 0x10
-    jmp test
+    mov ah, 0x0c
+    mov al, 0x3  ;farben: https://en.wikipedia.org/wiki/BIOS_color_attributes
+    mov bh, 1 ; page num
+    mov cx, 0 ;x cord
+    mov dx, 0 ;y cord
+    jmp draw
 
-text:
-    db 0x0a, 0x0d, "Geht :)", 0
+draw:
+    cmp cx, 320
+    je reset_x
+    int 0x10
+    add cx, 1
+    jmp draw
+
+reset_x:
+    mov cx, 0
+    cmp dx, 240
+    je exit
+    add dx, 1
+    jmp draw
